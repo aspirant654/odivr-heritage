@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdiVR: Odisha’s AR/VR Heritage Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; color: #333; background: #f9f5e7; line-height: 1.6; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Dancing Script', cursive; color: #800000; }
+        .btn { background: #d4a017; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        .btn:hover { background: #800000; }
+        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .fade-in { opacity: 0; animation: fadeIn 1s ease-in-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .card { background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-10px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 1rem; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #fff; padding: 2rem; border-radius: 10px; max-width: 600px; text-align: center; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; }
+
+        /* Navbar */
+        nav { position: sticky; top: 0; background: #800000; color: #fff; padding: 1rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        nav ul { list-style: none; display: flex; }
+        nav a { color: #fff; margin: 0 1rem; text-decoration: none; transition: color 0.3s; }
+        nav a:hover { color: #d4a017; }
+        .logo { font-size: 1.5rem; font-weight: 600; }
+
+        /* Hero */
+        #hero { background: url('https://source.unsplash.com/featured/?konark-sun-temple') no-repeat center/cover; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; position: relative; }
+        #hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        #hero-content { position: relative; z-index: 1; }
+
+        /* About */
+        #about .grid { grid-template-columns: 1fr 1fr; align-items: center; }
+
+        /* AR/VR Experiences */
+        #experiences .grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        /* Gallery */
+        #gallery .grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+        /* Audio */
+        #audio { background: linear-gradient(to right, #f9f5e7, #d4a017); text-align: center; }
+        .audio-player { display: flex; justify-content: center; align-items: center; margin: 2rem 0; }
+        .equalizer { display: flex; gap: 5px; margin-left: 1rem; }
+        .bar { width: 5px; height: 20px; background: #800000; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { height: 20px; } 50% { height: 40px; } }
+
+        /* Timeline */
+        #timeline { background: #f9f5e7; }
+        .timeline-item { margin: 2rem 0; padding: 1rem; border-left: 5px solid #d4a017; background: #fff; border-radius: 5px; }
+
+        /* Memory Capsules */
+        #memories { background: #800000; color: #fff; }
+        .memory-card { background: rgba(255,255,255,0.1); padding: 1rem; margin: 1rem; border-radius: 10px; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Festivals */
+        #festivals .grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .festival-card { position: relative; overflow: hidden; }
+        .festival-card::after { content: '🎉'; position: absolute; top: 10px; right: 10px; font-size: 2rem; animation: confetti 2s infinite; }
+        @keyframes confetti { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(360deg); } }
+
+        /* Quiz */
+        #quiz { background: #d4a017; color: #fff; text-align: center; }
+        .quiz-question { margin: 2rem 0; }
+        .quiz-options { display: flex; flex-direction: column; gap: 1rem; }
+        .quiz-option { background: #800000; padding: 0.5rem; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        .quiz-option:hover { background: #f9f5e7; color: #800000; }
+
+        /* Contact */
+        #contact { background: #f9f5e7; }
+        form { display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto; }
+        input, textarea { padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px; }
+
+        /* Footer */
+        footer { background: #800000; color: #fff; text-align: center; padding: 1rem; }
+
+        /* Mobile */
+        @media (max-width: 768px) { nav ul { flex-direction: column; } .grid { grid-template-columns: 1fr; } #hero { height: 70vh; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">OdiVR</div>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experiences">Experiences</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#audio">Voices</a></li>
+            <li><a href="#timeline">Timeline</a></li>
+            <li><a href="#memories">Memories</a></li>
+            <li><a href="#festivals">Festivals</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div id="hero-content">
+            <h1>OdiVR: Discover Odisha’s Living Heritage</h1>
+            <p>Experience the spirit of Odisha through Augmented and Virtual Reality.</p>
+            <button class="btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Start Exploring</button>
+        </div>
+    </section>
+
+    <section id="about" class="fade-in">
+        <h2>About OdiVR</h2>
+        <div class="grid">
+            <img src="https://source.unsplash.com/featured/?odissi-dance" alt="Odissi Dance">
+            <div>
+                <p>OdiVR preserves Odisha’s art, architecture, and dance through AR and VR. Explore temples like Konark Sun Temple, witness Odissi performances, and relive festivals virtually.</p>
+                <p>Our app brings Odisha’s rich heritage to life, from ancient sculptures to vibrant traditions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="experiences">
+        <h2>Immersive Experiences</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="https://source.unsplash.com/featured/?konark-temple" alt="VR Temple Tours">
+                <div class="card-content">
+                    <h3>VR Temple Tours</h3>
+                    <p>Walk through Konark Sun Temple in 360°.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/featured/?jagannath-temple" alt="AR Monuments">
+                <div class="card-content">
+                    <h3>AR Monuments</h3>
+                    <p>Scan and see lost heritage reconstructed.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/featured/?odissi-dance" alt="Odissi Dance in AR">
+                <div class="card-content">
+                    <h3>Odissi Dance in AR</h3>
+                    <p>Watch dancers come alive in augmented reality.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://source.unsplash.com/featured/?ratha-yatra" alt="Festival Time Travel">
+                <div class="card-content">
+                    <h3>Festival Time Travel</h3>
+                    <p>Experience Ratha Yatra and tribal fairs virtually.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <h2>Digital Museum Gallery</h2>
+        <div class="grid">
+            <div class="card" onclick="openModal('Konark Sun Temple: A UNESCO site with intricate carvings.')">
+                <img src="https://source.unsplash.com/featured/?konark-sun-temple" alt="Konark Sun Temple">
+                <div class="card-content">
+                    <h3>Konark Sun Temple</h3>
+                    <button class="btn">View in 3D</button>
+                </div>
+            </div>
+            <div class="card" onclick="openModal('Jagannath Temple: Home to Lord Jagannath.')">
+                <img src="https://source.unsplash.com/featured/?jagannath-temple" alt="Jagannath Temple">
+                <div class="card-content">
+                    <h3>Jagannath Temple</h3>
+                    <button class="btn">View in 3D</button>
+                </div>
+            </div>
+            <div class="card" onclick="openModal('Pattachitra Art: Traditional scroll paintings.')">
+                <img src="https://source.unsplash.com/featured/?pattachitra-art" alt="Pattachitra Art">
+                <div class="card-content">
+                    <h3>Pattachitra Art</h3>
+                    <button class="btn">View in 3D</button>
+                </div>
+            </div>
+            <div class="card" onclick="openModal('Pipili Applique Work: Colorful fabric art.')">
+                <img src="https://source.unsplash.com/featured/?pipili-applique" alt="Pipili Applique Work">
+                <div class="card-content">
+                    <h3>Pipili Applique Work</h3>
+                    <button class="btn">View in 3D</button>
+                </div>
+            </div>
+            <div class="card" onclick="openModal('Silver Filigree of Cuttack: Delicate silver craftsmanship.')">
+                <img src="https://source.unsplash.com/featured/?silver-filigree" alt="Silver Filigree of Cuttack">
+                <div class="card-content">
+                    <h3>Silver Filigree of Cuttack</h3>
+                    <button class="btn">View in 3D</button>
+                </div>
+            </div>
+        </div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p id="modal-text"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="audio">
+        <h2>Voices of Odisha</h2>
+        <p>Listen to folk music, Odissi tunes, and narrations.</p>
+        <div class="audio-player">
+            <audio id="audio-player" controls>
+                <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/mpeg"> <!-- Placeholder; replace with real Odisha audio -->
+            </audio>
+            <div class="equalizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline">
+        <h2>Cultural Timeline</h2>
+        <div class="timeline-item">
+            <h3>Ancient Kalinga Empire</h3>
+            <p>Warriors and traders shaped Odisha's early culture.</p>
+        </div>
+        <div class="timeline-item">
+            <h3>Ashokan Era</h3>
+            <p>Buddhist influences and rock edicts.</p>
+        </div>
+        <div class="timeline-item">
+            <h3>Temple Architecture Period</h3>
+            <p>Konark and Puri temples built.</p>
+        </div>
+        <div class="timeline-item">
+            <h3>Modern Odisha</h3>
+            <p>Independence and cultural revival.</p>
+        </div>
+    </section>
+
+    <section id="memories">
+        <h2>Memory Capsules</h2>
+        <div class="memory-card">
+            <p>“Visited Konark Temple — the carvings are breathtaking!”</p>
+        </div>
+        <div class="memory-card">
+            <p>“Watched Ratha Yatra for the first time — divine experience!”</p>
+        </div>
+    </section>
+
+    <section id="festivals">
+        <h2>Festivals & Crafts Showcase</h2>
+        <div class="grid">
+            <div class="card festival-card">
+                <img src="https://source.unsplash.com/featured/?ratha-yatra" alt="Ratha Yatra">
+                <div class="card-content">
+                    <h3>Ratha Yatra</h3>
+                    <p>Puri's chariot festival celebrating Lord Jagannath.</p>
+                </div>
+            </div>
+            <div class="card festival-card">
+                <img src="https://source.unsplash.com/featured/?durga-puja" alt="Durga Puja">
+                <div class="card-content">
+                    <h3>Durga Puja (Cuttack)</h3>
+                    <p>Vibrant celebrations with idols and lights.</p>
+                </div>
+            </div>
